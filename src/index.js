@@ -26,15 +26,6 @@ export default class SignatureCanvas extends Component {
     clearOnResize: true
   }
 
-  constructor(props) {
-    super(props);
-    this.count = 0;
-    this.state = {
-      trimmedDataURL: null
-    }
-   this.renderThrottledCanvas = throttle (this.renderCanvas, 5000)
-  }
-
   _sigPad = null
 
   _excludeOurProps = () => {
@@ -117,7 +108,7 @@ export default class SignatureCanvas extends Component {
 
   render () {
     const { canvasProps } = this.props
-    return this.renderThrottledCanvas();
+    return throttle (this.renderCanvas, 5000)();
   }
 
   // all wrapper functions below render
