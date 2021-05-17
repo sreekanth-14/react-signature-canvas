@@ -2,6 +2,8 @@ import PropTypes from 'prop-types'
 import React, { Component } from 'react'
 import SignaturePad from 'signature_pad'
 import trimCanvas from 'trim-canvas'
+import _, { debounce, throttle } from 'lodash';
+
 
 export default class SignatureCanvas extends Component {
   static propTypes = {
@@ -22,6 +24,15 @@ export default class SignatureCanvas extends Component {
 
   static defaultProps = {
     clearOnResize: true
+  }
+
+  constructor(props) {
+    super(props);
+    this.count = 0;
+    this.state = {
+      trimmedDataURL: null
+    }
+   this.renderThrottledCanvas = throttle (this.renderCanvas, 5000)
   }
 
   _sigPad = null
@@ -98,9 +109,15 @@ export default class SignatureCanvas extends Component {
     this.clear()
   }
 
+  renderCanvas = () => {
+    const { canvasProps } = this.props
+    console.log("-------------------------------Inside render canvas--------------------------")
+    return (<canvas ref={(ref) => { this._canvas = ref }} {...canvasProps} />)
+  }
+
   render () {
     const { canvasProps } = this.props
-    return <canvas ref={(ref) => { this._canvas = ref }} {...canvasProps} />
+    return this.renderThrottledCanvas();
   }
 
   // all wrapper functions below render
